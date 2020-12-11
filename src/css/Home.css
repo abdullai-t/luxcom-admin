@@ -1,0 +1,57 @@
+#figures-main-container{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 20px;
+    row-gap: 20px;
+    margin-top: 2rem;
+}
+#avatar{
+    height: 70px;
+    width: 70px;
+}
+#figure-container{
+    padding: 20px 20px;
+    background-color: chartreuse;
+    display: flex;
+
+}
+#figures-details{
+    margin-left: 15px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+#figures-details :first-child{
+    font-size: 1.2rem;
+}
+#figures-details :last-child{
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+#booking-table-header{
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+}
+#booking-table-header div{
+cursor: pointer;
+margin-top: 5px;
+}
+#booking-table-header h3{
+    color: grey;
+    font-weight: bold;
+}
+
+#surface{
+    margin-top: 3rem;
+    padding-bottom: 5px;
+}
+
+@media (max-width: 480px) {
+    #figures-main-container{
+        grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  

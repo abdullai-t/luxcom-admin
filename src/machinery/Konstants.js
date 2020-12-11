@@ -4,6 +4,7 @@ import Profile from './../pages/auth/Profile';
 import Rooms from './../pages/rooms/Rooms';
 import Services from './../pages/services/Services';
 import Staff from './../pages/staff/Staff';
+import Reservations from './../pages/reservation/Reservations';
 
 const Routes = [
     {
@@ -17,6 +18,10 @@ const Routes = [
     {
       sidebarName: 'Services',
       component: <Services/>,
+    },
+    {
+      sidebarName: 'Reservations',
+      component: <Reservations/>,
     },
     {
       sidebarName: 'Staff',

@@ -1,5 +1,5 @@
 import React from "react";
-
+import img from "../logo.svg";
 import {
   AppBar,
   CssBaseline,
@@ -22,15 +22,14 @@ import DashboardIcon from "@material-ui/icons/DashboardSharp";
 import MenuIcon from "@material-ui/icons/Menu";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import SettingsIcon from "@material-ui/icons/SettingsRounded";
-import AddIcon from "@material-ui/icons/Add";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import MeetingRoomTwoToneIcon from "@material-ui/icons/MeetingRoomTwoTone";
 import RoomServiceTwoToneIcon from "@material-ui/icons/RoomServiceTwoTone";
 import DirectionsRunTwoToneIcon from "@material-ui/icons/DirectionsRunTwoTone";
+import EventSeatTwoToneIcon from "@material-ui/icons/EventSeatTwoTone";
 
-import index from "../logo.svg";
-import { Link } from "react-router-dom";
 import Routes from "./../machinery/Konstants";
+
 
 const drawerWidth = 220;
 
@@ -70,6 +69,9 @@ const useStyles = makeStyles((theme) => ({
 
   grow: {
     flexGrow: 1,
+  },
+  left:{
+    marginRight:10
   },
 
   title: {
@@ -123,6 +125,7 @@ function SideBar({ component: Component, ...rest }) {
     <DashboardIcon />,
     <MeetingRoomTwoToneIcon />,
     <RoomServiceTwoToneIcon />,
+    <EventSeatTwoToneIcon />,
     <DirectionsRunTwoToneIcon />,
     <SettingsIcon />,
   ];
@@ -189,8 +192,9 @@ function SideBar({ component: Component, ...rest }) {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
+              <Avatar alt="avatar" src={img} className={classes.left} />
               <Typography variant="h6" noWrap>
-                Welcome, Tachyon
+                Tachyon
               </Typography>
             </IconButton>
           </div>

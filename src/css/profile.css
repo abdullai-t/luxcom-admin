@@ -1,0 +1,58 @@
+#profile-container {
+  margin-top: 2rem;
+  display: flex;
+}
+#user-info-container {
+  width: 40%;
+  padding: 15px 20px;
+  margin-right: 20px;
+}
+
+#profile-header {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+}
+#profile-header h3 {
+  color: grey;
+}
+
+#password-change-container {
+  width: 60%;
+  padding: 15px 20px;
+}
+#info-item {
+  margin-top: 0.6rem;
+}
+#info-item span {
+  font-size: 0.8rem;
+  color: grey;
+}
+#info-item p {
+  font-size: 1.2rem;
+  margin-top: 0.2rem;
+  font-weight: bold;
+  margin-bottom: 0.2rem !important;
+}
+.edit-mode-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  background-color: #3498db;
+}
+#edit-mode-icon {
+  font-size: 1.2rem;
+  color: white;
+}
+@media (max-width: 480px) {
+  #profile-container {
+    flex-direction: column;
+  }
+  #user-info-container {
+    width: 100%;
+  }
+  #password-change-container {
+    width: 100%;
+    margin-top: 2.5rem;
+  }
+}
