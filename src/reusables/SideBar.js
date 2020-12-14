@@ -27,8 +27,10 @@ import MeetingRoomTwoToneIcon from "@material-ui/icons/MeetingRoomTwoTone";
 import RoomServiceTwoToneIcon from "@material-ui/icons/RoomServiceTwoTone";
 import DirectionsRunTwoToneIcon from "@material-ui/icons/DirectionsRunTwoTone";
 import EventSeatTwoToneIcon from "@material-ui/icons/EventSeatTwoTone";
-
+import MessageIcon from '@material-ui/icons/Message';
 import Routes from "./../machinery/Konstants";
+import { useDispatch } from "react-redux";
+import { saveUserInfoInStateAction } from "../machinery/actions";
 
 
 const drawerWidth = 220;
@@ -70,8 +72,8 @@ const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
-  left:{
-    marginRight:10
+  left: {
+    marginRight: 10,
   },
 
   title: {
@@ -119,6 +121,7 @@ function SideBar({ component: Component, ...rest }) {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+  const dispatch = useDispatch();
 
   const menuId = "primary-search-account-menu";
   const icons = [
@@ -126,9 +129,21 @@ function SideBar({ component: Component, ...rest }) {
     <MeetingRoomTwoToneIcon />,
     <RoomServiceTwoToneIcon />,
     <EventSeatTwoToneIcon />,
+    <MessageIcon />,
     <DirectionsRunTwoToneIcon />,
     <SettingsIcon />,
   ];
+
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    dispatch(
+      saveUserInfoInStateAction({
+        user: {},
+        token: "",
+      })
+    )
+  };
 
   const drawer = (
     <div>
@@ -148,7 +163,7 @@ function SideBar({ component: Component, ...rest }) {
           );
         })}
 
-        <ListItem button className={classes.listItem}>
+        <ListItem button className={classes.listItem} onClick={logout}>
           <ListItemIcon>
             <ExitToAppIcon />
           </ListItemIcon>

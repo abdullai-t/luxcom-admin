@@ -6,7 +6,15 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from "@material-ui/core/Button";
 import { Table, FormControl } from "react-bootstrap";
+import StaffForm from "./StaffForm";
 export default class Staff extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      showAddStaff: false
+    }
+  }
+  
   render() {
     return (
       <Paper elevation={3} id="surface">
@@ -19,7 +27,7 @@ export default class Staff extends Component {
         <Divider />
         <div className="space-me" id="interactions-container">
           <div>
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" onClick={() => this.setState({ showAddStaff: true })}>
               Add New
             </Button>
           </div>
@@ -62,6 +70,11 @@ export default class Staff extends Component {
             </tr>
           </tbody>
         </Table>
+        <StaffForm
+          show={this.state.showAddStaff}
+          handleShow={this.handleShow}
+          onHide={() => this.setState({ showAddStaff: false })}
+        />
       </Paper>
     );
   }

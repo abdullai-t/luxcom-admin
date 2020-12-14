@@ -12,7 +12,6 @@ import 'firebase/storage'
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
 
   const storage = firebase.storage()
 

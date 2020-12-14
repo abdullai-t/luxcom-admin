@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { LoginUser } from "../../machinery/functions/IneractionFunctions";
+import { saveUserInfoInStateAction } from "../../machinery/actions";
 
 
 class Login extends Component {
@@ -25,6 +27,20 @@ class Login extends Component {
       return this.setState({
         error: "Email and/ or password field can not be empty",
       });
+      let user = await LoginUser({
+        email:email,
+        password:password
+      })
+      if (user.token){
+        localStorage.setItem("token", user.token)
+        this.props.saveUserData({
+          token:user.token,
+          user:user.data,
+        })
+        this.props.history.push("/")
+     
+      }
+      
   };
 
   render() {
@@ -68,12 +84,12 @@ class Login extends Component {
   }
 }
 
-// const mapDispatchToProps = (dispatch) => {
-//   return bindActionCreators(
-//     {
-//       saveUserData: saveUserInfoInStateAction,
-//     },
-//     dispatch
-//   );
-// };
-export default withRouter(Login);
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      saveUserData: saveUserInfoInStateAction,
+    },
+    dispatch
+  );
+}; 
+export default connect(null, mapDispatchToProps)(withRouter(Login));

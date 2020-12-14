@@ -5,7 +5,17 @@ import Divider from "@material-ui/core/Divider";
 import EditIcon from "@material-ui/icons/Edit";
 import ClearIcon from "@material-ui/icons/Clear";
 import "../../css/profile.css";
-export default class Profile extends Component {
+import { saveUserInfoInStateAction } from "../../machinery/actions";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import {
+  changePassword,
+  updateUserProfile,
+  getUserProfileData,
+} from "../../machinery/functions/IneractionFunctions";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import { Toast } from "react-bootstrap";
+class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,11 +25,53 @@ export default class Profile extends Component {
       phone: "",
       email: "",
       username: "",
+      password1: "",
+      password2: "",
+      oldPassword: "",
+      loading: false,
     };
   }
 
+  changeMyPassword = async (e) => {
+    e.preventDefault();
+
+    const { password1, password2 } = this.state;
+    if (!password1 || !password2 || password1 !== password2)
+      return this.setState({ info: "please Check the passwords" });
+    this.setState({ loading: true, info: "" });
+
+    let res = await changePassword(this.props.user.token, {
+      new_password1: password1,
+      new_password2: password2,
+    });
+    if (res.success) {
+      this.setState({ info: "password successfully changed", loading: false, openToast:true });
+    }
+  };
+
+  updateProfile = async (e) => {
+    e.preventDefault();
+    let res = await updateUserProfile(this.props.user.token, {
+      fname: this.state.fname,
+      lname: this.state.lname,
+      phone: this.state.phone,
+      email: this.state.email,
+    });
+    if (res.data) {
+      let data = await getUserProfileData(this.props.user.token);
+      if (data) {
+        this.props.saveUserData({
+          user: data.data[0],
+          token: this.props.user.token,
+        });
+        this.setState({ editMode: false });
+      }
+    }
+  };
+
   render() {
-    const { fname, lname, phone, email, username } = this.state;
+    const { fname, lname, phone, email } = this.state;
+    const { user } = this.props.user;
     return (
       <div id="profile-container">
         <Paper elevation={3} id="user-info-container">
@@ -27,9 +79,23 @@ export default class Profile extends Component {
             <h3>User Information</h3>
             <div className="center-me edit-mode-btn">
               {!this.state.editMode ? (
-                <EditIcon id="edit-mode-icon" onClick={()=>this.setState({editMode:true})} />
+                <EditIcon
+                  id="edit-mode-icon"
+                  onClick={() =>
+                    this.setState({
+                      fname: user.fname,
+                      lname: user.lname,
+                      email: user.email,
+                      phone: user.phone,
+                      editMode: true,
+                    })
+                  }
+                />
               ) : (
-                <ClearIcon id="edit-mode-icon" onClick={()=>this.setState({editMode:false})} />
+                <ClearIcon
+                  id="edit-mode-icon"
+                  onClick={() => this.setState({ editMode: false })}
+                />
               )}
             </div>
           </div>
@@ -61,41 +127,33 @@ export default class Profile extends Component {
                   </Form.Group>
                 </Col>
               </Row>
-              <Row>
-                <Col>
-                  <Form.Group>
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control
-                      autoFocus
-                      type="text"
-                      value={username}
-                      onChange={(e) =>
-                        this.setState({ username: e.target.value })
-                      }
-                      placeholder="First Name"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group>
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                      placeholder="Email"
-                      autoFocus
-                      type="Email"
-                      value={lname}
-                      onChange={(e) => this.setState({ email: e.target.value })}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
+              <Form.Group>
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  placeholder="Email"
+                  autoFocus
+                  type="Email"
+                  value={email}
+                  onChange={(e) => this.setState({ email: e.target.value })}
+                />
+              </Form.Group>
               <Form.Group controlId="formBasicPassword">
                 <Form.Label>Phone</Form.Label>
-                <Form.Control type="text" placeholder="phone number" />
+                <Form.Control
+                  type="text"
+                  placeholder="phone number"
+                  value={phone}
+                  onChange={(e) => this.setState({ phone: e.target.value })}
+                />
               </Form.Group>
               <center style={{ marginTop: "1.2rem" }}>
                 {" "}
-                <Button variant="primary" type="submit" className="button">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="button"
+                  onClick={this.updateProfile}
+                >
                   Save info
                 </Button>
               </center>
@@ -104,27 +162,27 @@ export default class Profile extends Component {
             <div>
               <div id="info-item">
                 <span>Full Name</span>
-                <p>Abdullai Tahiru</p>
-                <Divider />
-              </div>
-              <div id="info-item">
-                <span>Username</span>
-                <p>Tachyon</p>
+                <p>{user ? user.fname : "" + " " + user ? user.lname : ""}</p>
                 <Divider />
               </div>
               <div id="info-item">
                 <span>Email</span>
-                <p>abdullai.tahiru@gmial.com</p>
+                <p>{user ? user.email : ""}</p>
                 <Divider />
               </div>
               <div id="info-item">
                 <span>Staf ID</span>
-                <p>20511728</p>
+                <p>{user ? user.idNumber : ""}</p>
                 <Divider />
               </div>
               <div id="info-item">
                 <span>Phone</span>
-                <p>+233501654928</p>
+                <p>{user ? user.phone : ""}</p>
+                <Divider />
+              </div>
+              <div id="info-item">
+                <span>Address</span>
+                <p>{user ? user.homeAddress : ""}</p>
                 <Divider />
               </div>
             </div>
@@ -138,29 +196,62 @@ export default class Profile extends Component {
           <Form id="form">
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Old Password</Form.Label>
-              <Form.Control type="password" placeholder="Enter Old password" />
+              <Form.Control
+                type="password"
+                placeholder="Enter Old password"
+                value={this.state.oldPassword}
+                onChange={(e) => this.setState({ oldPassword: e.target.value })}
+              />
             </Form.Group>
 
             <Form.Group controlId="formBasicPassword">
               <Form.Label>New Password</Form.Label>
-              <Form.Control type="password" placeholder="New Password" />
+              <Form.Control
+                type="password"
+                placeholder="New Password"
+                value={this.state.password1}
+                onChange={(e) => this.setState({ password1: e.target.value })}
+              />
             </Form.Group>
             <Form.Group controlId="formBasicPassword">
               <Form.Label>Confirm New Password</Form.Label>
               <Form.Control
                 type="password"
                 placeholder="Confirm New Password"
+                value={this.state.password2}
+                onChange={(e) => this.setState({ password2: e.target.value })}
               />
             </Form.Group>
             <center style={{ marginTop: "1.2rem" }}>
               {" "}
-              <Button variant="primary" type="submit" className="button">
+              <Button
+                variant="primary"
+                type="submit"
+                className="button"
+                onClick={this.changeMyPassword}
+              >
                 Change Password
               </Button>
             </center>
+            {this.state.loading ? <LinearProgress color="secondary" /> : null}
           </Form>
         </Paper>
       </div>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      saveUserData: saveUserInfoInStateAction,
+    },
+    dispatch
+  );
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

@@ -7,15 +7,43 @@ import EventSeatIcon from "@material-ui/icons/EventSeat";
 import PeopleIcon from "@material-ui/icons/People";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import { Table } from "react-bootstrap";
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from "@material-ui/icons/Delete";
 import "../../css/Home.css";
-export default class Home extends Component {
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { getDashboardDataAction } from "../../machinery/actions";
+import { deleteReservation } from "../../machinery/functions/IneractionFunctions";
+import TextsmsIcon from "@material-ui/icons/Textsms";
+class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      dashboard:{}
+    };
   }
 
+  componentWillReceiveProps({ dashboard }) {
+    this.setState({ dashboard: dashboard});
+  }
+  componentDidMount(){
+    let dashboard = this.props.dashboard
+     this.setState({dashboard:dashboard})     
+   }
+
+   deleteUserReservation = async (item) => {
+    let { bills } = this.state.dashboard;
+    let filtered = bills.filter((x) => x.id !== item.id);
+    let newDash = { ...this.state.dashboard };
+    newDash.bills = filtered;
+    this.setState({ dashboard: newDash });
+
+    let res = await deleteReservation(this.props.token, item.reservation.id);
+    if (res.success) {
+      this.props.saveDashboardData();
+    }
+  };
   recentReservations = () => {
+    const { bills } = this.state.dashboard;
     return (
       <Paper elevation={3} id="surface">
         <div id="booking-table-header">
@@ -28,7 +56,7 @@ export default class Home extends Component {
           <thead>
             <tr>
               <th>No.</th>
-              <th>Name</th>
+              <th>Guest</th>
               <th>Phone</th>
               <th>Check In</th>
               <th>Check Out</th>
@@ -39,27 +67,40 @@ export default class Home extends Component {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>1</td>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td style={{ display: "flex" }}>
-                <div id="action" className="center-me delete">
-                  <DeleteIcon id="action-icon" />
-                </div>
-              </td>
-            </tr>
+            {bills && bills.length
+              ? bills.map((bill, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{index+1}</td>
+                      <td>{bill.reservation.guest.fname}</td>
+                      <td>{bill.reservation.guest.phone}</td>
+                      <td>{bill.reservation.check_in_date}</td>
+                      <td>{bill.reservation.check_out_date}</td>
+                      <td>{bill.is_paid ? "PAID" :"PENDING"}</td>
+                      <td>{bill.reservation.booking_code}</td>
+                      <td>{bill.reservation.room.type}</td>
+                      <td style={{ display: "flex" }}>
+                      <div id="action" className="center-me edit">
+                          <TextsmsIcon
+                            id="action-icon"
+                            // onClick={() => this.editRoom(room)}
+                          />
+                        </div>
+                        <div id="action" className="center-me delete" onClick={()=>this.deleteUserReservation(bill)}>
+                          <DeleteIcon id="action-icon" />
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              : null}
           </tbody>
         </Table>
       </Paper>
     );
   };
   render() {
+    const { dashboard } = this.state;
     return (
       <div>
         <div id="figures-main-container">
@@ -73,7 +114,7 @@ export default class Home extends Component {
             </Avatar>
             <div id="figures-details">
               <span>Reservations</span>
-              <span>450</span>
+              <span>{dashboard.reservation_count}</span>
             </div>
           </div>
           <div
@@ -86,7 +127,7 @@ export default class Home extends Component {
             </Avatar>
             <div id="figures-details">
               <span>Guests</span>
-              <span>450</span>
+              <span>{dashboard.guests_count}</span>
             </div>
           </div>
           <div
@@ -98,8 +139,8 @@ export default class Home extends Component {
               <MeetingRoomIcon style={{ fontSize: 40, color: "white" }} />
             </Avatar>
             <div id="figures-details">
-              <span>Ocupied Rooms</span>
-              <span>450</span>
+              <span>Rooms</span>
+              <span>{dashboard.room_count}</span>
             </div>
           </div>
           <div
@@ -121,3 +162,18 @@ export default class Home extends Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    dashboard: state.dashboard,
+    token: state.user.token,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      saveDashboardData: getDashboardDataAction,
+    },
+    dispatch
+  );
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
