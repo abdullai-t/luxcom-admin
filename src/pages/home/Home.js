@@ -14,6 +14,7 @@ import { bindActionCreators } from "redux";
 import { getDashboardDataAction } from "../../machinery/actions";
 import { deleteReservation } from "../../machinery/functions/IneractionFunctions";
 import TextsmsIcon from "@material-ui/icons/Textsms";
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -149,11 +150,11 @@ class Home extends Component {
             style={{ backgroundColor: "#28a745" }}
           >
             <Avatar id="avatar" style={{ backgroundColor: "#1E8449" }}>
-              <FolderIcon style={{ fontSize: 40, color: "white" }} />
+              <AccountBalanceWalletIcon style={{ fontSize: 40, color: "white" }} />
             </Avatar>
             <div id="figures-details">
-              <span>Reservations</span>
-              <span>450</span>
+              <span>Earnings</span>
+              <span>{dashboard.earnings}</span>
             </div>
           </div>
         </div>

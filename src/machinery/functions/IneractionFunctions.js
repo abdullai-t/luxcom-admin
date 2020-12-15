@@ -10,10 +10,21 @@ import {
   DELETE_ROOM_FROM_BACKEND_URL,
   CHANGE_PASSWORD_URL,
   DELETE_RESERVATION_URL,
+  REGISTER_URL,
 } from "../Konstants";
 
 export const LoginUser = (cred) => {
   let user = Axios.post(LOGIN_URL, cred)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => console.log(err));
+
+  return user;
+};
+
+export const CreateStaff = (data) => {
+  let user = Axios.post(REGISTER_URL, data)
     .then((res) => {
       return res.data;
     })

@@ -106,3 +106,12 @@ body {
 font-size: 0.9rem;
 color:white
 }
+#error-text {
+  font-size: 0.8rem;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  background-color: tomato;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

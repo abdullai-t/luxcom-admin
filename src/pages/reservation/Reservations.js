@@ -3,7 +3,6 @@ import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
 import { Table, FormControl } from "react-bootstrap";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -27,7 +26,6 @@ class Reservations extends Component {
     let dashboard = this.props.dashboard;
     this.setState({ dashboard: dashboard });
   }
-
   deleteUserReservation = async (item) => {
     let { bills } = this.state.dashboard;
     let filtered = bills.filter((x) => x.id !== item.id);
