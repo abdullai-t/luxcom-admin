@@ -14,24 +14,31 @@ import { bindActionCreators } from "redux";
 import { getDashboardDataAction } from "../../machinery/actions";
 import { deleteReservation } from "../../machinery/functions/IneractionFunctions";
 import TextsmsIcon from "@material-ui/icons/Textsms";
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
+import EmailIcon from "@material-ui/icons/Email";
+import MessagingForm from "../../reusables/MessagingForm";
+import ContactSupportIcon from '@material-ui/icons/ContactSupport';
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dashboard:{}
+      dashboard: {},
+      emailMode: false,
+      smsMode: false,
+      receiver: '',
+      messageType: "",
     };
   }
 
   componentWillReceiveProps({ dashboard }) {
-    this.setState({ dashboard: dashboard});
+    this.setState({ dashboard: dashboard });
   }
-  componentDidMount(){
-    let dashboard = this.props.dashboard
-     this.setState({dashboard:dashboard})     
-   }
+  componentDidMount() {
+    let dashboard = this.props.dashboard;
+    this.setState({ dashboard: dashboard });
+  }
 
-   deleteUserReservation = async (item) => {
+  deleteUserReservation = async (item) => {
     let { bills } = this.state.dashboard;
     let filtered = bills.filter((x) => x.id !== item.id);
     let newDash = { ...this.state.dashboard };
@@ -42,6 +49,18 @@ class Home extends Component {
     if (res.success) {
       this.props.saveDashboardData();
     }
+  };
+
+  handleShow = () => {
+    this.setState({ emailMode: false, smsMode: false });
+  };
+
+  sendSMS = (user) => {
+    this.setState({  receiver: user.phone, messageType: "SMS" }, ()=>this.setState({smsMode: true}));
+    
+  };
+  sendEmail = (user) => {
+    this.setState({ receiver: user.email, messageType: "EMAIL" },()=>this.setState({  emailMode: true}));
   };
   recentReservations = () => {
     const { bills } = this.state.dashboard;
@@ -72,22 +91,34 @@ class Home extends Component {
               ? bills.map((bill, index) => {
                   return (
                     <tr key={index}>
-                      <td>{index+1}</td>
+                      <td>{index + 1}</td>
                       <td>{bill.reservation.guest.fname}</td>
                       <td>{bill.reservation.guest.phone}</td>
                       <td>{bill.reservation.check_in_date}</td>
                       <td>{bill.reservation.check_out_date}</td>
-                      <td>{bill.is_paid ? "PAID" :"PENDING"}</td>
+                      <td>{bill.is_paid ? "PAID" : "PENDING"}</td>
                       <td>{bill.reservation.booking_code}</td>
                       <td>{bill.reservation.room.type}</td>
                       <td style={{ display: "flex" }}>
-                      <div id="action" className="center-me edit">
-                          <TextsmsIcon
-                            id="action-icon"
-                            // onClick={() => this.editRoom(room)}
-                          />
+                        <div
+                          id="action"
+                          className="center-me edit"
+                          onClick={() => this.sendSMS(bill.reservation.guest)}
+                        >
+                          <TextsmsIcon id="action-icon" />
                         </div>
-                        <div id="action" className="center-me delete" onClick={()=>this.deleteUserReservation(bill)}>
+                        <div
+                          id="action"
+                          className="center-me edit"
+                          onClick={() => this.sendEmail(bill.reservation.guest)}
+                        >
+                          <EmailIcon id="action-icon" />
+                        </div>
+                        <div
+                          id="action"
+                          className="center-me delete"
+                          onClick={() => this.deleteUserReservation(bill)}
+                        >
                           <DeleteIcon id="action-icon" />
                         </div>
                       </td>
@@ -137,11 +168,11 @@ class Home extends Component {
             style={{ backgroundColor: "#8E44AD" }}
           >
             <Avatar id="avatar" style={{ backgroundColor: "#7D3C98" }}>
-              <MeetingRoomIcon style={{ fontSize: 40, color: "white" }} />
+              <ContactSupportIcon style={{ fontSize: 40, color: "white" }} />
             </Avatar>
             <div id="figures-details">
-              <span>Rooms</span>
-              <span>{dashboard.room_count}</span>
+              <span>Responses</span>
+              <span>{dashboard.queries_count}</span>
             </div>
           </div>
           <div
@@ -150,7 +181,9 @@ class Home extends Component {
             style={{ backgroundColor: "#28a745" }}
           >
             <Avatar id="avatar" style={{ backgroundColor: "#1E8449" }}>
-              <AccountBalanceWalletIcon style={{ fontSize: 40, color: "white" }} />
+              <AccountBalanceWalletIcon
+                style={{ fontSize: 40, color: "white" }}
+              />
             </Avatar>
             <div id="figures-details">
               <span>Earnings</span>
@@ -159,6 +192,16 @@ class Home extends Component {
           </div>
         </div>
         {this.recentReservations()}
+
+        {this.state.emailMode || this.state.smsMode ? (
+          <MessagingForm
+            type={this.state.messageType}
+            receiver={this.state.receiver}
+            show={this.state.emailMode || this.state.smsMode}
+            handleShow={this.handleShow}
+            onHide={() => this.setState({ emailMode: false, smsMode: false })}
+          />
+        ) : null}
       </div>
     );
   }

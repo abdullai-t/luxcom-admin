@@ -1,13 +1,11 @@
 import React, { Component } from "react";
-import { Button, Form } from "react-bootstrap";
-import '../../css/login.css'
-import { Link } from "react-router-dom";
+import { Button, Form , Spinner} from "react-bootstrap";
+import "../../css/login.css";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { LoginUser } from "../../machinery/functions/IneractionFunctions";
 import { saveUserInfoInStateAction } from "../../machinery/actions";
-
 
 class Login extends Component {
   constructor(props) {
@@ -17,30 +15,33 @@ class Login extends Component {
       password: "",
       error: "",
       token: "",
+      loading: false,
     };
   }
 
   handleLogin = async (e) => {
+    this.setState({ loading: true });
     e.preventDefault();
     const { password, email } = this.state;
     if (!password || !email)
       return this.setState({
         error: "Email and/ or password field can not be empty",
       });
-      let user = await LoginUser({
-        email:email,
-        password:password
-      })
-      if (user.token){
-        localStorage.setItem("token", user.token)
-        this.props.saveUserData({
-          token:user.token,
-          user:user.data,
-        })
-        this.props.history.push("/")
-     
-      }
-      
+    let user = await LoginUser({
+      email: email,
+      password: password,
+    });
+    if (user && user.token) {
+      localStorage.setItem("token", user.token);
+      this.props.saveUserData({
+        token: user.token,
+        user: user.data,
+      });
+      this.setState({ loading: false });
+      this.props.history.push("/");
+    } else {
+      this.setState({ loading: false, error: "unable to login try again !" });
+    }
   };
 
   render() {
@@ -71,12 +72,24 @@ class Login extends Component {
                 onChange={(e) => this.setState({ password: e.target.value })}
               />
             </Form.Group>
-            <center>
-            <Button block size="lg" type="submit" className="button login-btn">
-              Login
-            </Button>
-            </center>
-
+            {this.state.loading ? (
+              <center>
+                <Spinner animation="border" role="status">
+                  <span className="sr-only">Loading...</span>
+                </Spinner>
+              </center>
+            ) : (
+              <center>
+                <Button
+                  block
+                  size="lg"
+                  type="submit"
+                  className="button login-btn"
+                >
+                  Login
+                </Button>
+              </center>
+            )}
           </Form>
         </div>
       </div>
@@ -91,5 +104,5 @@ const mapDispatchToProps = (dispatch) => {
     },
     dispatch
   );
-}; 
+};
 export default connect(null, mapDispatchToProps)(withRouter(Login));

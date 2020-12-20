@@ -43,7 +43,6 @@ class Staff extends Component {
     let { staff } = this.state;
     let filtered = staff.filter((x) => x.user !== user.user);
     this.setState({ staff: filtered });
-
   }
   render() {
     const { staff, filtered } = this.state;
@@ -115,8 +114,8 @@ class Staff extends Component {
               : staff && staff.length
               ? staff.map((user, index) => {
                   return (
-                    <tr key={index+1}>
-                      <td>{index}</td>
+                    <tr key={index}>
+                      <td>{index+1}</td>
                       <td>
                         {user ? user.fname : "" + " " + user ? user.lname : ""}
                       </td>

@@ -9,6 +9,8 @@ import { bindActionCreators } from "redux";
 import { getDashboardDataAction } from "../../machinery/actions";
 import { deleteReservation } from "../../machinery/functions/IneractionFunctions";
 import TextsmsIcon from "@material-ui/icons/Textsms";
+import EmailIcon from '@material-ui/icons/Email';
+import MessagingForm from "../../reusables/MessagingForm";
 class Reservations extends Component {
   constructor(props) {
     super(props);
@@ -16,6 +18,10 @@ class Reservations extends Component {
       dashboard: {},
       filtered: [],
       query: "",
+      emailMode: false,
+      smsMode: false,
+      receiver: '',
+      messageType: "",
     };
   }
 
@@ -48,6 +54,19 @@ class Reservations extends Component {
       return null;
     });
     this.setState({ filtered });
+  };
+
+  
+  sendSMS = (user) => {
+    this.setState({  receiver: user.phone, messageType: "SMS" }, ()=>this.setState({smsMode: true}));
+    
+  };
+  sendEmail = (user) => {
+    this.setState({ receiver: user.email, messageType: "EMAIL" },()=>this.setState({  emailMode: true}));
+  };
+
+  handleShow = () => {
+    this.setState({ emailMode: false, smsMode: false });
   };
 
   render() {
@@ -109,11 +128,19 @@ class Reservations extends Component {
                       <td>{bill.reservation.booking_code}</td>
                       <td>{bill.reservation.room.type}</td>
                       <td style={{ display: "flex" }}>
-                        <div id="action" className="center-me edit">
-                          <TextsmsIcon
-                            id="action-icon"
-                            // onClick={() => this.editRoom(room)}
-                          />
+                        <div
+                          id="action"
+                          className="center-me edit"
+                          onClick={() => this.sendSMS(bill.reservation.guest)}
+                        >
+                          <TextsmsIcon id="action-icon" />
+                        </div>
+                        <div
+                          id="action"
+                          className="center-me edit"
+                          onClick={() => this.sendEmail(bill.reservation.guest)}
+                        >
+                          <EmailIcon id="action-icon" />
                         </div>
                         <div
                           id="action"
@@ -139,11 +166,19 @@ class Reservations extends Component {
                       <td>{bill.reservation.booking_code}</td>
                       <td>{bill.reservation.room.type}</td>
                       <td style={{ display: "flex" }}>
-                        <div id="action" className="center-me edit">
-                          <TextsmsIcon
-                            id="action-icon"
-                            // onClick={() => this.editRoom(room)}
-                          />
+                        <div
+                          id="action"
+                          className="center-me edit"
+                          onClick={() => this.sendSMS(bill.reservation.guest)}
+                        >
+                          <TextsmsIcon id="action-icon" />
+                        </div>
+                        <div
+                          id="action"
+                          className="center-me edit"
+                          onClick={() => this.sendEmail(bill.reservation.guest)}
+                        >
+                          <EmailIcon id="action-icon" />
                         </div>
                         <div
                           id="action"
@@ -159,6 +194,15 @@ class Reservations extends Component {
               : null}
           </tbody>
         </Table>
+        {this.state.emailMode || this.state.smsMode ? (
+          <MessagingForm
+            type={this.state.messageType}
+            receiver={this.state.receiver}
+            show={this.state.emailMode || this.state.smsMode}
+            handleShow={this.handleShow}
+            onHide={() => this.setState({ emailMode: false, smsMode: false })}
+          />
+        ) : null}
       </Paper>
     );
   }

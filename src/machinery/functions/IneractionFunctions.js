@@ -11,6 +11,7 @@ import {
   CHANGE_PASSWORD_URL,
   DELETE_RESERVATION_URL,
   REGISTER_URL,
+  GENERIC_MESSAGING_URL
 } from "../Konstants";
 
 export const LoginUser = (cred) => {
@@ -164,3 +165,17 @@ export const deleteReservation = (token, id) => {
     .catch((err) => console.log(err));
   return response;
 };
+
+export const sendGenericMessage = (token, data) => {
+  let response = Axios.post(GENERIC_MESSAGING_URL, data, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => console.log(err));
+  return response;
+};
+
