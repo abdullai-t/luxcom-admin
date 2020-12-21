@@ -11,8 +11,9 @@ import RoomForm from "./RoomForm";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { getDashboardDataAction } from "../../machinery/actions";
-import { deleteRoomFromBackend } from "../../machinery/functions/IneractionFunctions";
+import { deleteRoomFromBackend, deleteTable } from "../../machinery/functions/IneractionFunctions";
 import Avatar from "@material-ui/core/Avatar";
+import ConfirmationModal from "../../reusables/ConfirmationModal";
 class Rooms extends Component {
   constructor(props) {
     super(props);
@@ -25,6 +26,8 @@ class Rooms extends Component {
       editMode: false,
       filtered: [],
       query: "",
+      confirm:false,
+      table:""
     };
   }
 
@@ -62,13 +65,21 @@ class Rooms extends Component {
     });
     this.setState({ filtered });
   };
+
+  deleteAll = async()=>{
+    let del = await deleteTable(this.props.token, "ROOMS")
+    if (del){
+     this.props.saveDashboardData()
+     this.setState({confirm:false})
+    };
+  }
   render() {
     const { rooms, filtered } = this.state;
     return (
       <Paper elevation={3} id="surface">
         <div id="booking-table-header">
           <h3>Rooms</h3>
-          <div>
+          <div onClick = {this.props.saveDashboardData}>
             <RefreshIcon style={{ color: "grey" }} />
           </div>
         </div>
@@ -81,6 +92,14 @@ class Rooms extends Component {
               onClick={() => this.setState({ showAddRoom: true, toEdit: "" })}
             >
               Add New
+            </Button>
+            <Button
+            style={{marginLeft:"1.5rem"}}
+              variant="contained"
+              color="secondary"
+              onClick={()=>this.setState({confirm:true})}
+            >
+              DELETE TABLE
             </Button>
           </div>
           <div className="side-ways">
@@ -183,6 +202,15 @@ class Rooms extends Component {
             editMode={this.state.editMode}
             handleShow={this.handleShow}
             onHide={() => this.setState({ showAddRoom: false })}
+          />
+        ) : null}
+        {this.state.confirm ? (
+          <ConfirmationModal
+            show={this.state.confirm}
+            delete = {()=>this.deleteAll()}
+            toEdit={this.state.toEdit}
+            handleShow={this.handleShow}
+            onHide={() => this.setState({ confirm: false })}
           />
         ) : null}
       </Paper>

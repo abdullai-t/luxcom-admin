@@ -162,7 +162,7 @@ class Profile extends Component {
             <div>
               <div id="info-item">
                 <span>Full Name</span>
-                <p>{user ? user.fname : "" + " " + user ? user.lname : ""}</p>
+                <p>{user ? user.fname + "  " + user.lname : "" }</p>
                 <Divider />
               </div>
               <div id="info-item">

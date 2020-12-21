@@ -11,7 +11,10 @@ import {
   CHANGE_PASSWORD_URL,
   DELETE_RESERVATION_URL,
   REGISTER_URL,
-  GENERIC_MESSAGING_URL
+  GENERIC_MESSAGING_URL,
+  DELETE_STAFF_URL,
+  DELETE_WHOLE_TABLE_URL,
+  DELETE_ONE_QUERY_URL
 } from "../Konstants";
 
 export const LoginUser = (cred) => {
@@ -179,3 +182,41 @@ export const sendGenericMessage = (token, data) => {
   return response;
 };
 
+export const deleteStaff = (token, username) => {
+  let response = Axios.delete(`${DELETE_STAFF_URL+username}/`,  {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => console.log(err));
+  return response;
+};
+
+export const deleteTable = (token, table) => {
+  let response = Axios.delete(`${DELETE_WHOLE_TABLE_URL+table}/`,  {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => console.log(err));
+  return response;
+};
+
+export const deleteResponse = (token, id) => {
+  let response = Axios.delete(`${DELETE_ONE_QUERY_URL+id}/`,  {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => console.log(err));
+  return response;
+};

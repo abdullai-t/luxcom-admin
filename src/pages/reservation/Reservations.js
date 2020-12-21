@@ -7,10 +7,12 @@ import { Table, FormControl } from "react-bootstrap";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { getDashboardDataAction } from "../../machinery/actions";
-import { deleteReservation } from "../../machinery/functions/IneractionFunctions";
+import { deleteReservation, deleteTable } from "../../machinery/functions/IneractionFunctions";
 import TextsmsIcon from "@material-ui/icons/Textsms";
-import EmailIcon from '@material-ui/icons/Email';
+import EmailIcon from "@material-ui/icons/Email";
 import MessagingForm from "../../reusables/MessagingForm";
+import Button from "@material-ui/core/Button";
+import ConfirmationModal from "../../reusables/ConfirmationModal";
 class Reservations extends Component {
   constructor(props) {
     super(props);
@@ -20,8 +22,10 @@ class Reservations extends Component {
       query: "",
       emailMode: false,
       smsMode: false,
-      receiver: '',
+      receiver: "",
       messageType: "",
+      confirm:false,
+      table:""
     };
   }
 
@@ -56,19 +60,28 @@ class Reservations extends Component {
     this.setState({ filtered });
   };
 
-  
   sendSMS = (user) => {
-    this.setState({  receiver: user.phone, messageType: "SMS" }, ()=>this.setState({smsMode: true}));
-    
+    this.setState({ receiver: user.phone, messageType: "SMS" }, () =>
+      this.setState({ smsMode: true })
+    );
   };
   sendEmail = (user) => {
-    this.setState({ receiver: user.email, messageType: "EMAIL" },()=>this.setState({  emailMode: true}));
+    this.setState({ receiver: user.email, messageType: "EMAIL" }, () =>
+      this.setState({ emailMode: true })
+    );
   };
 
   handleShow = () => {
     this.setState({ emailMode: false, smsMode: false });
   };
 
+  deleteAll = async()=>{
+    let del = await deleteTable(this.props.token, "RESERVATIONS")
+    if (del){
+     this.props.saveDashboardData()
+     this.setState({confirm:false})
+    };
+  }
   render() {
     const { bills } = this.state.dashboard;
     const { filtered } = this.state;
@@ -76,16 +89,16 @@ class Reservations extends Component {
       <Paper elevation={3} id="surface">
         <div id="booking-table-header">
           <h3>All Reservations</h3>
-          <div>
+          <div onClick={this.props.saveDashboardData}>
             <RefreshIcon style={{ color: "grey" }} />
           </div>
         </div>
         <Divider />
         <div className="space-me" id="interactions-container">
           <div>
-            {/* <Button variant="contained" color="primary">
-              Add New
-            </Button> */}
+            <Button variant="contained" color="secondary"  onClick={()=>this.setState({confirm:true})}>
+              DELETE TABLE
+            </Button>
           </div>
           <div className="side-ways">
             <span id="search-name">Search:</span>
@@ -201,6 +214,16 @@ class Reservations extends Component {
             show={this.state.emailMode || this.state.smsMode}
             handleShow={this.handleShow}
             onHide={() => this.setState({ emailMode: false, smsMode: false })}
+          />
+        ) : null}
+
+        {this.state.confirm ? (
+          <ConfirmationModal
+            show={this.state.confirm}
+            delete={() => this.deleteAll()}
+            toEdit={this.state.toEdit}
+            handleShow={this.handleShow}
+            onHide={() => this.setState({ confirm: false })}
           />
         ) : null}
       </Paper>

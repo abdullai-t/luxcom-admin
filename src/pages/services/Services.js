@@ -8,9 +8,10 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import ServiceForm from "./ServiceForm";
 import { connect } from "react-redux";
-import { deleteServiceFromBackend } from "../../machinery/functions/IneractionFunctions";
+import { deleteServiceFromBackend,deleteTable } from "../../machinery/functions/IneractionFunctions";
 import { bindActionCreators } from "redux";
 import { getDashboardDataAction } from "../../machinery/actions";
+import ConfirmationModal from "../../reusables/ConfirmationModal";
 class Services extends Component {
   constructor(props) {
     super(props);
@@ -20,7 +21,9 @@ class Services extends Component {
       filtered: [],
       toEdit: {},
       editMode: false,
-      query:""
+      query: "",
+      confirm:false,
+      table:""
     };
   }
   componentWillReceiveProps({ services }) {
@@ -60,13 +63,22 @@ class Services extends Component {
     });
     this.setState({ filtered });
   };
+
+  deleteAll = async()=>{
+   let del = await deleteTable(this.props.token, "SERVICES")
+   if (del){
+    this.props.saveDashboardData()
+    this.setState({confirm:false})
+   }
+
+  }
   render() {
     const { services, filtered } = this.state;
     return (
       <Paper elevation={3} id="surface">
         <div id="booking-table-header">
           <h3>Services</h3>
-          <div>
+          <div onClick={this.props.saveDashboardData}>
             <RefreshIcon style={{ color: "grey" }} />
           </div>
         </div>
@@ -82,6 +94,14 @@ class Services extends Component {
             >
               Add New
             </Button>
+            <Button
+              style={{ marginLeft: "1.5rem" }}
+              variant="contained"
+              color="secondary"
+              onClick={()=>this.setState({confirm:true})}
+            >
+              DELETE TABLE
+            </Button>
           </div>
           <div className="side-ways">
             <span id="search-name">Search:</span>
@@ -89,10 +109,10 @@ class Services extends Component {
               type="search"
               placeholder="Search"
               className="mr-sm-2"
-              onChange={(e) =>{
+              onChange={(e) => {
                 this.setState({ query: e.target.value });
-                this.searchInputListener(e)
-              } }
+                this.searchInputListener(e);
+              }}
             />
           </div>
         </div>
@@ -168,6 +188,15 @@ class Services extends Component {
             editMode={this.state.editMode}
             handleShow={this.handleShow}
             onHide={() => this.setState({ showAddService: false })}
+          />
+        ) : null}
+        {this.state.confirm ? (
+          <ConfirmationModal
+            show={this.state.confirm}
+            delete={() => this.deleteAll()}
+            toEdit={this.state.toEdit}
+            handleShow={this.handleShow}
+            onHide={() => this.setState({ confirm: false })}
           />
         ) : null}
       </Paper>

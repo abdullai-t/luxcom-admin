@@ -9,6 +9,7 @@ import StaffForm from "./StaffForm";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { getDashboardDataAction } from "../../machinery/actions";
+import { deleteStaff } from "../../machinery/functions/IneractionFunctions";
 class Staff extends Component {
   constructor(props) {
     super(props);
@@ -39,10 +40,14 @@ class Staff extends Component {
     this.setState({ filtered });
   };
 
-  deleteStaff = (user)=>{
+  deleteAStaff = async(user)=>{
     let { staff } = this.state;
     let filtered = staff.filter((x) => x.user !== user.user);
     this.setState({ staff: filtered });
+    let res = await deleteStaff(this.props.token, user.fname)
+    if (res && res.success){
+      this.props.saveDashboardData();
+    }
   }
   render() {
     const { staff, filtered } = this.state;
@@ -50,7 +55,7 @@ class Staff extends Component {
       <Paper elevation={3} id="surface">
         <div id="booking-table-header">
           <h3>All Staff</h3>
-          <div>
+          <div onClick = {this.props.saveDashboardData}>
             <RefreshIcon style={{ color: "grey" }} />
           </div>
         </div>
@@ -104,7 +109,7 @@ class Staff extends Component {
                       <td>{user ? user.idNumber : ""}</td>
                       <td>{user ? user.homeAddress : ""}</td>
                       <td style={{ display: "flex" }}>
-                        <div id="action" className="center-me delete"  onClick={()=>this.deleteStaff(user)}>
+                        <div id="action" className="center-me delete"  onClick={()=>this.deleteAStaff(user)}>
                           <DeleteIcon id="action-icon" />
                         </div>
                       </td>
@@ -124,7 +129,7 @@ class Staff extends Component {
                       <td>{user ? user.idNumber : ""}</td>
                       <td>{user ? user.homeAddress : ""}</td>
                       <td style={{ display: "flex" }}>
-                        <div id="action" className="center-me delete" onClick={()=>this.deleteStaff(user)}>
+                        <div id="action" className="center-me delete" onClick={()=>this.deleteAStaff(user)}>
                           <DeleteIcon id="action-icon" />
                         </div>
                       </td>

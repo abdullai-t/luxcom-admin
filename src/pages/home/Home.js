@@ -39,10 +39,10 @@ class Home extends Component {
   }
 
   deleteUserReservation = async (item) => {
-    let { bills } = this.state.dashboard;
-    let filtered = bills.filter((x) => x.id !== item.id);
+    let { bills_today } = this.state.dashboard;
+    let filtered = bills_today.filter((x) => x.id !== item.id);
     let newDash = { ...this.state.dashboard };
-    newDash.bills = filtered;
+    newDash.bills_today = filtered;
     this.setState({ dashboard: newDash });
 
     let res = await deleteReservation(this.props.token, item.reservation.id);
@@ -63,12 +63,12 @@ class Home extends Component {
     this.setState({ receiver: user.email, messageType: "EMAIL" },()=>this.setState({  emailMode: true}));
   };
   recentReservations = () => {
-    const { bills } = this.state.dashboard;
+    const { bills_today } = this.state.dashboard;
     return (
       <Paper elevation={3} id="surface">
         <div id="booking-table-header">
           <h3>Recent Reservations</h3>
-          <div>
+          <div onClick = {this.props.saveDashboardData}>
             <RefreshIcon style={{ color: "grey" }} />
           </div>
         </div>
@@ -87,8 +87,8 @@ class Home extends Component {
             </tr>
           </thead>
           <tbody>
-            {bills && bills.length
-              ? bills.map((bill, index) => {
+            {bills_today && bills_today.length
+              ? bills_today.map((bill, index) => {
                   return (
                     <tr key={index}>
                       <td>{index + 1}</td>

@@ -26,6 +26,9 @@ export const SAVE_DASHBOARD_DATA_TO_STATE = "SAVE_DASHBOARD_DATA_TO_STATE"
 // export const SAVE_ROOM_EDIT_TO_BACKEND_URL = "https://luxcom-web-api.herokuapp.com/api/reservation/update/room/"
 // export const DELETE_RESERVATION_URL = "https://luxcom-web-api.herokuapp.com/api/reservation/delete/reservation/"
 // export const GENERIC_MESSAGING_URL = "https://luxcom-web-api.herokuapp.com/api/reservation/send/message/"
+// export const DELETE_ONE_QUERY_URL = "https://luxcom-web-api.herokuapp.com/api/reservation/delete/queries/"
+// export const DELETE_WHOLE_TABLE_URL = "https://luxcom-web-api.herokuapp.com/api/reservation/delete/table/"
+// export const DELETE_STAFF_URL= "https://luxcom-web-api.herokuapp.com/api/auth/delete/staff/"
 
 export const LOGIN_URL = "http://127.0.0.1:8000/api/auth/admin-login/"
 export const REGISTER_URL = "http://127.0.0.1:8000/api/auth/staff/"
@@ -40,7 +43,7 @@ export const DELETE_ROOM_FROM_BACKEND_URL = "http://127.0.0.1:8000/api/reservati
 export const SAVE_ROOM_EDIT_TO_BACKEND_URL = "http://127.0.0.1:8000/api/reservation/update/room/"
 export const DELETE_RESERVATION_URL = "http://127.0.0.1:8000/api/reservation/delete/reservation/"
 export const GENERIC_MESSAGING_URL = "http://127.0.0.1:8000/api/reservation/send/message/"
-export const DELETE_ONE_QUERY_URL = "http://127.0.0.1:8000/api/reservation/delete/queries/"
+export const DELETE_ONE_QUERY_URL = "http://127.0.0.1:8000/api/reservation/delete/query/"
 export const DELETE_WHOLE_TABLE_URL = "http://127.0.0.1:8000/api/reservation/delete/table/"
 export const DELETE_STAFF_URL= "http://127.0.0.1:8000/api/auth/delete/staff/"
 
