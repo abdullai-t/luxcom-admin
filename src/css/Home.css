@@ -49,9 +49,34 @@ margin-top: 5px;
     padding-bottom: 5px;
 }
 
+
+/* ========   messging componenet css */
+#bulk-messeging-container{
+    width: 70vw;
+}
+#selections-container{
+    width: 100%;
+    padding: 20px 20px;
+    display: flex;
+}
+
+#form-container{
+    padding-bottom: 1.8rem;
+    margin-top: 1.8rem;
+}
+.bulk-message-btn{
+  margin-top: 1.8rem;
+}
+
 @media (max-width: 480px) {
     #figures-main-container{
         grid-template-columns: repeat(2, 1fr);
+    }
+    #bulk-messeging-container{
+        width: 100vw;
+    }
+    .bulk-message-btn{
+        width:100%;
     }
   }
   

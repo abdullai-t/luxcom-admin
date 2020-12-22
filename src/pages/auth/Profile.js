@@ -14,7 +14,6 @@ import {
   getUserProfileData,
 } from "../../machinery/functions/IneractionFunctions";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { Toast } from "react-bootstrap";
 class Profile extends Component {
   constructor(props) {
     super(props);
