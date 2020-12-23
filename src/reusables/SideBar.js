@@ -209,7 +209,7 @@ function SideBar({ component: Component, ...rest }) {
             >
               <Avatar alt="avatar" src={img} className={classes.left} />
               <Typography variant="h6" noWrap>
-                Tachyon
+                Admin
               </Typography>
             </IconButton>
           </div>
