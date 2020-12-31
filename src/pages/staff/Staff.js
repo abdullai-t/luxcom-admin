@@ -18,17 +18,20 @@ class Staff extends Component {
       staff: [],
       filtered: [],
       query: "",
+      addAccountant: false,
+      admins: [],
     };
   }
   handleShow = () => {
     this.setState({ showAddStaff: false });
   };
-  componentWillReceiveProps({ staff }) {
-    this.setState({ staff: staff });
+  componentWillReceiveProps({ staff, admins }) {
+    this.setState({ staff: staff, admins });
   }
   componentDidMount() {
     let staff = this.props.staff;
-    this.setState({ staff: staff });
+    let admins = this.props.admins;
+    this.setState({ staff: staff, admins: admins });
   }
   searchInputListener = (e) => {
     const content = e.target.value.toLowerCase();
@@ -40,22 +43,91 @@ class Staff extends Component {
     this.setState({ filtered });
   };
 
-  deleteAStaff = async(user)=>{
+  deleteAStaff = async (user) => {
     let { staff } = this.state;
-    let filtered = staff.filter((x) => x.user !== user.user);
+    let filtered = staff.filter((x) => x.fname !== user.fname);
     this.setState({ staff: filtered });
-    let res = await deleteStaff(this.props.token, user.fname)
-    if (res && res.success){
+    let res = await deleteStaff(this.props.token, user.fname);
+    if (res && res.success) {
       this.props.saveDashboardData();
     }
-  }
-  render() {
+  };
+
+  spitOtherUsers = () => {
+    const { admins } = this.state;
+    return (
+      <Paper elevation={3} id="surface">
+        <div id="booking-table-header">
+          <h3>Other Admins</h3>
+          <div onClick={this.props.saveDashboardData}>
+            <RefreshIcon style={{ color: "grey" }} />
+          </div>
+        </div>
+        <Divider />
+        <div className="space-me" id="interactions-container">
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.setState({ showAddStaff: true })}
+            >
+              Add New
+            </Button>
+          </div>
+        </div>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Type</th>
+              <th>Nationality</th>
+              <th>Address</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {admins && admins.length
+              ? admins.map((admin, index) => {
+                  return (
+                    <tr>
+                      <th>{index + 1}</th>
+                      <th>{admin.fname + "  " + admin.lname}</th>
+                      <th>{admin.username}</th>
+                      <th>{admin.phone}</th>
+                      <th>{admin.email}</th>
+                      <th>{admin.is_accountant ? "Accountant" : "Admin"}</th>
+                      <th>{admin.nationality}</th>
+                      <th>{admin.homeAddress}</th>
+                      <td style={{ display: "flex" }}>
+                        <div
+                          id="action"
+                          className="center-me delete"
+                          // onClick={}
+                        >
+                          <DeleteIcon id="action-icon" />
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              : null}
+          </tbody>
+        </Table>
+      </Paper>
+    );
+  };
+
+  spitStaff = () => {
     const { staff, filtered } = this.state;
     return (
       <Paper elevation={3} id="surface">
         <div id="booking-table-header">
           <h3>All Staff</h3>
-          <div onClick = {this.props.saveDashboardData}>
+          <div onClick={this.props.saveDashboardData}>
             <RefreshIcon style={{ color: "grey" }} />
           </div>
         </div>
@@ -91,6 +163,7 @@ class Staff extends Component {
               <th>Phone</th>
               <th>Email</th>
               <th>ID Number</th>
+              <th>Job</th>
               <th>Address</th>
               <th>Action</th>
             </tr>
@@ -100,16 +173,19 @@ class Staff extends Component {
               ? filtered.map((user, index) => {
                   return (
                     <tr key={index}>
-                      <td>{index+1}</td>
-                      <td>
-                        {user ? user.fname : "" + " " + user ? user.lname : ""}
-                      </td>
+                      <td>{index + 1}</td>
+                      <td>{user ? user.fname + " " + user.lname : ""}</td>
                       <td>{user ? user.phone : ""}</td>
                       <td>{user ? user.email : ""}</td>
                       <td>{user ? user.idNumber : ""}</td>
+                      <td>{user ? user.job : ""}</td>
                       <td>{user ? user.homeAddress : ""}</td>
                       <td style={{ display: "flex" }}>
-                        <div id="action" className="center-me delete"  onClick={()=>this.deleteAStaff(user)}>
+                        <div
+                          id="action"
+                          className="center-me delete"
+                          onClick={() => this.deleteAStaff(user)}
+                        >
                           <DeleteIcon id="action-icon" />
                         </div>
                       </td>
@@ -120,16 +196,19 @@ class Staff extends Component {
               ? staff.map((user, index) => {
                   return (
                     <tr key={index}>
-                      <td>{index+1}</td>
-                      <td>
-                        {user ? user.fname : "" + " " + user ? user.lname : ""}
-                      </td>
+                      <td>{index + 1}</td>
+                      <td>{user ? user.fname + " " + user.lname : ""}</td>
                       <td>{user ? user.phone : ""}</td>
                       <td>{user ? user.email : ""}</td>
                       <td>{user ? user.idNumber : ""}</td>
+                      <td>{user ? user.job : ""}</td>
                       <td>{user ? user.homeAddress : ""}</td>
                       <td style={{ display: "flex" }}>
-                        <div id="action" className="center-me delete" onClick={()=>this.deleteAStaff(user)}>
+                        <div
+                          id="action"
+                          className="center-me delete"
+                          onClick={() => this.deleteAStaff(user)}
+                        >
                           <DeleteIcon id="action-icon" />
                         </div>
                       </td>
@@ -139,19 +218,31 @@ class Staff extends Component {
               : null}
           </tbody>
         </Table>
-        <StaffForm
-          show={this.state.showAddStaff}
-          handleShow={this.handleShow}
-          handleShow={this.handleShow}
-          onHide={() => this.setState({ showAddStaff: false })}
-        />
+        {this.state.showAddStaff ? (
+          <StaffForm
+            show={this.state.showAddStaff}
+            handleShow={this.handleShow}
+            handleShow={this.handleShow}
+            onHide={() => this.setState({ showAddStaff: false })}
+            addAccountant={this.state.addAccountant}
+          />
+        ) : null}
       </Paper>
+    );
+  };
+  render() {
+    return (
+      <div>
+        {this.spitOtherUsers()}
+        {this.spitStaff()}
+      </div>
     );
   }
 }
 const mapStateToProps = (state) => {
   return {
     staff: state.dashboard.staff,
+    admins: state.dashboard.admins,
     token: state.user.token,
   };
 };

@@ -114,7 +114,7 @@ class Messaging extends Component {
 
     let res = await sendGenericMessage(this.props.token, {
       messageType: this.state.type,
-      receiver: type === "EMAIL" ? receivers : receivers.toString(),
+      receiver: receivers,
       message: this.state.message,
       subject: this.state.subject,
     });
@@ -153,7 +153,7 @@ class Messaging extends Component {
                 >
                   <option>Select the type of message</option>
                   <option value="EMAIL">email</option>
-                  {/* <option value="SMS">Sms</option> */}
+                  <option value="SMS">Sms</option>
                 </Form.Control>
               </Form.Group>
             </Col>

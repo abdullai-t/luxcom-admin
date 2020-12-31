@@ -28,9 +28,11 @@ import RoomServiceTwoToneIcon from "@material-ui/icons/RoomServiceTwoTone";
 import DirectionsRunTwoToneIcon from "@material-ui/icons/DirectionsRunTwoTone";
 import EventSeatTwoToneIcon from "@material-ui/icons/EventSeatTwoTone";
 import MessageIcon from '@material-ui/icons/Message';
-import Routes from "./../machinery/Konstants";
-import { useDispatch } from "react-redux";
+import {Routes, AccountantRoutes} from "./../machinery/Konstants";
+import { useDispatch,useSelector } from "react-redux";
 import { saveUserInfoInStateAction } from "../machinery/actions";
+import RssFeedIcon from '@material-ui/icons/RssFeed';
+import ShowChartIcon from '@material-ui/icons/ShowChart';
 
 
 const drawerWidth = 220;
@@ -123,6 +125,7 @@ function SideBar({ component: Component, ...rest }) {
   };
   const dispatch = useDispatch();
 
+
   const menuId = "primary-search-account-menu";
   const icons = [
     <DashboardIcon />,
@@ -130,11 +133,18 @@ function SideBar({ component: Component, ...rest }) {
     <RoomServiceTwoToneIcon />,
     <EventSeatTwoToneIcon />,
     <MessageIcon />,
+    <RssFeedIcon/>,
     <DirectionsRunTwoToneIcon />,
     <SettingsIcon />,
   ];
+  const Ficons = [
+    <DashboardIcon />,
+    <ShowChartIcon />,
+    <SettingsIcon />,
+  ];
 
-
+  const username = useSelector(state => state.user.user)
+  const is_accountant = useSelector(state => state.user.is_accountant)
   const logout = () => {
     localStorage.removeItem("token");
     dispatch(
@@ -150,7 +160,19 @@ function SideBar({ component: Component, ...rest }) {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {Routes.map((route, index) => {
+        {
+        is_accountant ? AccountantRoutes.map((route, index) => {
+          return (
+            <ListItem
+              button
+              onClick={() => setIndex(index)}
+              className={classes.listItem}
+            >
+              <ListItemIcon>{Ficons[index]}</ListItemIcon>
+              <ListItemText primary={route.sidebarName} />
+            </ListItem>
+          );
+        }): Routes.map((route, index) => {
           return (
             <ListItem
               button
@@ -209,7 +231,7 @@ function SideBar({ component: Component, ...rest }) {
             >
               <Avatar alt="avatar" src={img} className={classes.left} />
               <Typography variant="h6" noWrap>
-                Admin
+                {username ? username.fname :"Admin"}
               </Typography>
             </IconButton>
           </div>
@@ -260,7 +282,7 @@ function SideBar({ component: Component, ...rest }) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {Routes[index].component}
+        {!is_accountant ? Routes[index].component : AccountantRoutes[index].component}
       </main>
     </div>
   );

@@ -28,6 +28,7 @@ class Profile extends Component {
       password2: "",
       oldPassword: "",
       loading: false,
+      address:""
     };
   }
 
@@ -55,8 +56,9 @@ class Profile extends Component {
       lname: this.state.lname,
       phone: this.state.phone,
       email: this.state.email,
+      homeAddress:this.state.address
     });
-    if (res.data) {
+    if (res && res.data) {
       let data = await getUserProfileData(this.props.user.token);
       if (data) {
         this.props.saveUserData({
@@ -69,7 +71,7 @@ class Profile extends Component {
   };
 
   render() {
-    const { fname, lname, phone, email } = this.state;
+    const { fname, lname, phone, email,address } = this.state;
     const { user } = this.props.user;
     return (
       <div id="profile-container">
@@ -130,6 +132,7 @@ class Profile extends Component {
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                   placeholder="Email"
+                  disabled
                   autoFocus
                   type="Email"
                   value={email}
@@ -143,6 +146,15 @@ class Profile extends Component {
                   placeholder="phone number"
                   value={phone}
                   onChange={(e) => this.setState({ phone: e.target.value })}
+                />
+              </Form.Group>
+              <Form.Group controlId="formBasicPassword">
+                <Form.Label>Address</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="phone number"
+                  value={address}
+                  onChange={(e) => this.setState({ address: e.target.value })}
                 />
               </Form.Group>
               <center style={{ marginTop: "1.2rem" }}>
@@ -170,8 +182,8 @@ class Profile extends Component {
                 <Divider />
               </div>
               <div id="info-item">
-                <span>Staf ID</span>
-                <p>{user ? user.idNumber : ""}</p>
+                <span>Username</span>
+                <p>{user ? user.username : ""}</p>
                 <Divider />
               </div>
               <div id="info-item">

@@ -14,7 +14,11 @@ import {
   GENERIC_MESSAGING_URL,
   DELETE_STAFF_URL,
   DELETE_WHOLE_TABLE_URL,
-  DELETE_ONE_QUERY_URL
+  DELETE_ONE_QUERY_URL,
+  ADD_NEWS_URL,
+  UPDATE_NEWS_URL,
+  DELETE_A_NEWS_URL,
+  CREATE_STAFF_URL
 } from "../Konstants";
 
 export const LoginUser = (cred) => {
@@ -28,7 +32,7 @@ export const LoginUser = (cred) => {
 };
 
 export const CreateStaff = (data) => {
-  let user = Axios.post(REGISTER_URL, data)
+  let user = Axios.post(CREATE_STAFF_URL, data)
     .then((res) => {
       return res.data;
     })
@@ -210,6 +214,46 @@ export const deleteTable = (token, table) => {
 
 export const deleteResponse = (token, id) => {
   let response = Axios.delete(`${DELETE_ONE_QUERY_URL+id}/`,  {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => console.log(err));
+  return response;
+};
+
+
+export const addNewNews = (token, data) => {
+  let response = Axios.post(ADD_NEWS_URL, data, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => console.log(err));
+  return response;
+};
+
+export const saveEditANews = (token, data, id) => {
+  let response = Axios.patch(`${UPDATE_NEWS_URL+id}/`, data, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => console.log(err));
+  return response;
+};
+
+export const deleteANews = (token, id) => {
+  let response = Axios.delete(`${DELETE_A_NEWS_URL+id}/`,  {
     headers: {
       Authorization: `Token ${token}`,
     },

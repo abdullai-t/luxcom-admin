@@ -10,7 +10,7 @@ class StaffForm extends Component {
   constructor() {
     super();
     this.state = {
-      loading:false,
+      loading: false,
       email: "",
       password: "",
       error: "",
@@ -19,11 +19,12 @@ class StaffForm extends Component {
       address: "",
       phone: "",
       nationality: "",
+      job: "",
+      addAccountant:false
     };
   }
 
-  addStaff = async(e)=>{
-    this.setState({loading:true})
+  addStaff = async (e) => {
     e.preventDefault();
     const {
       password,
@@ -33,31 +34,32 @@ class StaffForm extends Component {
       lname,
       phone,
       nationality,
+      job,
     } = this.state;
-    if (!password || !email || !address || !fname || !lname)
+    if (!email || !address || !fname || !lname)
       return this.setState({ error: "make sure all fields are populated" });
-    this.setState({ error: "" });
-   let user = await CreateStaff({
+    this.setState({ error: "", loading: true });
+    let user = await CreateStaff({
       email: email,
-      password: password,
-      password2: password,
       fname: fname,
       lname: lname,
-      address: address,
+      homeAddress: address,
       phone: phone,
       nationality: nationality,
       username: fname,
+      job: job,
     });
-    if (user.token){
+    if (user.data) {
       this.props.saveDashboardData();
-      this.setState({loading:false})
-      this.props.handleShow()
-
+      this.setState({ loading: false });
+      this.props.handleShow();
+    } else {
+      this.setState({
+        error: "Error occured while adding staff",
+        loading: false,
+      });
     }
-    else{
-      this.setState({error:"Error occured while adding staff", loading:false})
-    }
-  }
+  };
   render() {
     const {
       password,
@@ -68,6 +70,7 @@ class StaffForm extends Component {
       phone,
       error,
       nationality,
+      job,
     } = this.state;
     return (
       <Modal
@@ -78,7 +81,7 @@ class StaffForm extends Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Staff Form
+            {this.props.addAccountant ? "Accountant" : "Staff"} Form
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -146,7 +149,7 @@ class StaffForm extends Component {
                 type="text"
                 value={phone}
                 onChange={(e) => this.setState({ phone: e.target.value })}
-                placeholder="+2335505050"
+                placeholder="05505050"
               />
             </Form.Group>
             <Row>
@@ -162,27 +165,34 @@ class StaffForm extends Component {
                 </Form.Group>
               </Col>
               <Col>
-                <Form.Group size="lg" controlId="password">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={password}
-                    onChange={(e) =>
-                      this.setState({ password: e.target.value })
-                    }
-                  />
-                </Form.Group>
+                {this.state.addAccountant ? (
+                  <Form.Group size="lg" controlId="password">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      value={password}
+                      onChange={(e) =>
+                        this.setState({ password: e.target.value })
+                      }
+                    />
+                  </Form.Group>
+                ) : (
+                  <Form.Group size="lg" controlId="password">
+                    <Form.Label>Job</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={job}
+                      onChange={(e) => this.setState({ job: e.target.value })}
+                    />
+                  </Form.Group>
+                )}
               </Col>
             </Row>
           </Form>
           {this.state.loading ? <LinearProgress color="secondary" /> : null}
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            className="button"
-            variant="primary"
-            onClick={this.addStaff}
-          >
+          <Button className="button" variant="primary" onClick={this.addStaff}>
             Add Staff
           </Button>
         </Modal.Footer>
@@ -204,4 +214,7 @@ const mapDispatchToProps = (dispatch) => {
     dispatch
   );
 };
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(StaffForm))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(StaffForm));
