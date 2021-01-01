@@ -38,14 +38,12 @@ class Reservations extends Component {
   }
   deleteUserReservation = async (item) => {
     let { bills } = this.state.dashboard;
-    let filtered = bills.filter((x) => x.id !== item.id);
-    let newDash = { ...this.state.dashboard };
-    newDash.bills = filtered;
-    this.setState({ dashboard: newDash });
-
     let res = await deleteReservation(this.props.token, item.reservation.id);
-    if (res.success) {
-      this.props.saveDashboardData();
+    if (res && res.success) {
+      let filtered = bills.filter((x) => x.id !== item.id);
+      let newDash = { ...this.state.dashboard };
+      newDash.bills = filtered;
+      this.setState({ dashboard: newDash }, ()=>this.props.saveDashboardData());    
     }
   };
 

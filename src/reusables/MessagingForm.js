@@ -33,7 +33,7 @@ class MessagingForm extends Component {
 
     let res = await sendGenericMessage(this.props.token, {
         messageType:this.state.type,
-        receiver:receiver,
+        receiver:[receiver],
         message:message,
         subject:subject
     })

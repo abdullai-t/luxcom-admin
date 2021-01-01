@@ -199,9 +199,9 @@ class RoomForm extends Component {
                 <Form.Group>
                   <Form.Label>Bed Size</Form.Label>
                   <Form.Control
-                    placeholder="0"
+                    placeholder="Bed size"
                     autoFocus
-                    type="number"
+                    type="text"
                     value={this.state.bed_size}
                     onChange={(e) =>
                       this.setState({ bed_size: e.target.value })

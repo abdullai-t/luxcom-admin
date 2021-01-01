@@ -52,6 +52,7 @@ export const GENERIC_MESSAGING_URL = "http://127.0.0.1:8000/api/reservation/send
 export const DELETE_ONE_QUERY_URL = "http://127.0.0.1:8000/api/reservation/delete/query/"
 export const DELETE_WHOLE_TABLE_URL = "http://127.0.0.1:8000/api/reservation/delete/table/"
 export const DELETE_STAFF_URL= "http://127.0.0.1:8000/api/auth/delete/staff/"
+export const DELETE_USER_URL= "http://127.0.0.1:8000/api/auth/delete/user/"
 export const ADD_NEWS_URL = "http://127.0.0.1:8000/api/news/add/"
 export const DELETE_A_NEWS_URL = "http://127.0.0.1:8000/api/news/delete/"
 export const UPDATE_NEWS_URL= "http://127.0.0.1:8000/api/news/update/"

@@ -9,7 +9,7 @@ import StaffForm from "./StaffForm";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { getDashboardDataAction } from "../../machinery/actions";
-import { deleteStaff } from "../../machinery/functions/IneractionFunctions";
+import { deleteStaff , deleteUser} from "../../machinery/functions/IneractionFunctions";
 class Staff extends Component {
   constructor(props) {
     super(props);
@@ -45,11 +45,20 @@ class Staff extends Component {
 
   deleteAStaff = async (user) => {
     let { staff } = this.state;
-    let filtered = staff.filter((x) => x.fname !== user.fname);
-    this.setState({ staff: filtered });
+ 
     let res = await deleteStaff(this.props.token, user.fname);
     if (res && res.success) {
-      this.props.saveDashboardData();
+      let filtered = staff.filter((x) => x.fname !== user.fname);
+      this.setState({ staff: filtered }, ()=>this.props.saveDashboardData());
+    }
+  };
+
+  deleteAdmin = async (user) => {
+    let { admins } = this.state;
+    let res = await deleteUser(this.props.token, user.username);
+    if (res && res.success) {
+      let filtered = admins.filter((x) => x.fname !== user.fname);
+      this.setState({ admins: filtered }, ()=>this.props.saveDashboardData());
     }
   };
 
@@ -69,7 +78,7 @@ class Staff extends Component {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => this.setState({ showAddStaff: true })}
+              onClick={() => this.setState({ addAccountant:true, showAddStaff: true })}
             >
               Add New
             </Button>
@@ -106,7 +115,7 @@ class Staff extends Component {
                         <div
                           id="action"
                           className="center-me delete"
-                          // onClick={}
+                          onClick={()=>this.deleteAdmin(admin)}
                         >
                           <DeleteIcon id="action-icon" />
                         </div>
@@ -137,7 +146,7 @@ class Staff extends Component {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => this.setState({ showAddStaff: true })}
+              onClick={() => this.setState({  addAccountant:false,showAddStaff: true })}
             >
               Add New
             </Button>

@@ -50,12 +50,11 @@ class Messaging extends Component {
 
   deleteAQueries = async (query) => {
     const { queries } = this.state;
-    let filtered = queries.filter((x) => x.id !== query.id);
-    this.setState({ queries: filtered });
 
     let res = await deleteResponse(this.props.token, query.id);
     if (res && res.success) {
-      this.props.saveDashboardData();
+      let filtered = queries.filter((x) => x.id !== query.id);
+      this.setState({ queries: filtered }, ()=>this.props.saveDashboardData());
     }
   };
   deleteAll = async () => {

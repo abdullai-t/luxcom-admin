@@ -11,18 +11,15 @@ export default class ConfirmationModal extends Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Messaging Form
+           Comfirmation 
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        Are you sure you want to delete this table ?? !
+        Are you sure you want to delete this table ?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={()=>this.props.handleShow}>
-            Close
-          </Button>
           <Button variant="danger" onClick={()=>this.props.delete()}>
-            delete
+            Yes I'm sure
           </Button>
         </Modal.Footer>
       </Modal>

@@ -56,7 +56,7 @@ class ServiceForm extends Component {
       },
       this.state.id
     );
-    if (res.success) {
+    if (res && res.success) {
       this.setState({ loading: false });
       this.props.handleShow();
       this.props.saveDashboardData();

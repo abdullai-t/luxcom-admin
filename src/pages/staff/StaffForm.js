@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { CreateStaff } from "../../machinery/functions/IneractionFunctions";
+import { CreateStaff, addAdmin } from "../../machinery/functions/IneractionFunctions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { getDashboardDataAction } from "../../machinery/actions";
@@ -20,14 +20,21 @@ class StaffForm extends Component {
       phone: "",
       nationality: "",
       job: "",
-      addAccountant:false
+      addAccountant: false,
+      type: "",
     };
+  }
+
+  componentDidMount() {
+    this.setState({ addAccountant: this.props.addAccountant });
+  }
+  componentWillReceiveProps({ addAccountant }) {
+    this.setState({ addAccountant: addAccountant });
   }
 
   addStaff = async (e) => {
     e.preventDefault();
     const {
-      password,
       email,
       address,
       fname,
@@ -35,20 +42,40 @@ class StaffForm extends Component {
       phone,
       nationality,
       job,
+      type,
+      password
     } = this.state;
     if (!email || !address || !fname || !lname)
       return this.setState({ error: "make sure all fields are populated" });
     this.setState({ error: "", loading: true });
-    let user = await CreateStaff({
-      email: email,
-      fname: fname,
-      lname: lname,
-      homeAddress: address,
-      phone: phone,
-      nationality: nationality,
-      username: fname,
-      job: job,
-    });
+    let user;
+    if (this.state.addAccountant){
+      user = await addAdmin({
+        email: email,
+        fname: fname,
+        lname: lname,
+        homeAddress: address,
+        phone: phone,
+        nationality: nationality,
+        username: fname,
+        job: type,
+        password:password,
+        password2:password
+      });
+    }
+    else{
+      user = await CreateStaff({
+        email: email,
+        fname: fname,
+        lname: lname,
+        homeAddress: address,
+        phone: phone,
+        nationality: nationality,
+        username: fname,
+        job: job,
+      });
+    }
+   
     if (user.data) {
       this.props.saveDashboardData();
       this.setState({ loading: false });
@@ -71,6 +98,7 @@ class StaffForm extends Component {
       error,
       nationality,
       job,
+      type,
     } = this.state;
     return (
       <Modal
@@ -81,7 +109,7 @@ class StaffForm extends Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            {this.props.addAccountant ? "Accountant" : "Staff"} Form
+            {this.props.addAccountant ? "Admin" : "Staff"} Form
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -141,17 +169,48 @@ class StaffForm extends Component {
                 </Form.Group>
               </Col>
             </Row>
+            {this.state.addAccountant ? (
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Label>Contact</Form.Label>
+                    <Form.Control
+                      autoFocus
+                      type="text"
+                      value={phone}
+                      onChange={(e) => this.setState({ phone: e.target.value })}
+                      placeholder="05505050"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                    <Form.Label>Admin Type</Form.Label>
+                    <Form.Control
+                      as="select"
+                      value={type}
+                      onChange={(e) => this.setState({ type: e.target.value })}
+                    >
+                      <option>Select Admin type</option>
+                      <option value="ACCOUNTANT">Accountant</option>
+                      <option value="ADMIN">Admin</option>
+                    </Form.Control>
+                  </Form.Group>
+                </Col>
+              </Row>
+            ) : (
+              <Form.Group>
+                <Form.Label>Contact</Form.Label>
+                <Form.Control
+                  autoFocus
+                  type="text"
+                  value={phone}
+                  onChange={(e) => this.setState({ phone: e.target.value })}
+                  placeholder="05505050"
+                />
+              </Form.Group>
+            )}
 
-            <Form.Group>
-              <Form.Label>Contact</Form.Label>
-              <Form.Control
-                autoFocus
-                type="text"
-                value={phone}
-                onChange={(e) => this.setState({ phone: e.target.value })}
-                placeholder="05505050"
-              />
-            </Form.Group>
             <Row>
               <Col>
                 <Form.Group size="lg" controlId="email">
@@ -193,7 +252,7 @@ class StaffForm extends Component {
         </Modal.Body>
         <Modal.Footer>
           <Button className="button" variant="primary" onClick={this.addStaff}>
-            Add Staff
+            Save {this.props.addAccountant ? "Admin" : "Staff"}
           </Button>
         </Modal.Footer>
       </Modal>

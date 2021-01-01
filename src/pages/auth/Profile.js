@@ -152,7 +152,7 @@ class Profile extends Component {
                 <Form.Label>Address</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="phone number"
+                  placeholder="Address"
                   value={address}
                   onChange={(e) => this.setState({ address: e.target.value })}
                 />

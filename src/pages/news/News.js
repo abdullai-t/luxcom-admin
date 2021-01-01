@@ -41,14 +41,14 @@ class News extends Component {
 
   deleteNews = async (item) => {
     let { news } = this.state;
-    let filtered = news.filter((x) => x.id !== item.id);
-    this.setState({ news: filtered });
     let res = await deleteANews(
       this.props.token,
       item.id
     );
-    if (res.success) {
-      this.props.saveDashboardData();
+    if (res && res.success) {
+      let filtered = news.filter((x) => x.id !== item.id);
+      this.setState({ news: filtered }, ()=>this.props.saveDashboardData());
+      
     }
   };
 

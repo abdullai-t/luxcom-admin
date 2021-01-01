@@ -39,14 +39,14 @@ class Services extends Component {
 
   deleteService = async (item) => {
     let { services } = this.state;
-    let filtered = services.filter((x) => x.id !== item.id);
-    this.setState({ services: filtered });
     let res = await deleteServiceFromBackend(
       this.props.token,
       item.service_name
     );
-    if (res.success) {
-      this.props.saveDashboardData();
+    if (res && res.success) {
+      let filtered = services.filter((x) => x.id !== item.id);
+      this.setState({ services: filtered }, ()=>this.props.saveDashboardData());
+      
     }
   };
 

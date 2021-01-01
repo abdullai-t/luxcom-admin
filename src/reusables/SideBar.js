@@ -100,6 +100,9 @@ const useStyles = makeStyles((theme) => ({
   listItem: {
     marginTop: "6%",
   },
+  active:{
+    backgroundColor:"#EBEDEF"
+  }
 }));
 
 function SideBar({ component: Component, ...rest }) {
@@ -115,6 +118,7 @@ function SideBar({ component: Component, ...rest }) {
   const [, setAnchorEl] = React.useState(null);
   const [, setMobileMoreAnchorEl] = React.useState(null);
   const [index, setIndex] = React.useState(0);
+  const [active, setActive] = React.useState(0);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -144,7 +148,7 @@ function SideBar({ component: Component, ...rest }) {
   ];
 
   const username = useSelector(state => state.user.user)
-  const is_accountant = useSelector(state => state.user.is_accountant)
+  const accountant = useSelector(state => state.user.user)
   const logout = () => {
     localStorage.removeItem("token");
     dispatch(
@@ -154,8 +158,10 @@ function SideBar({ component: Component, ...rest }) {
       })
     )
   };
-
+  const is_accountant = accountant ? accountant.is_accountant: false
+  console.log(is_accountant)
   const drawer = (
+    
     <div>
       <div className={classes.toolbar} />
       <Divider />
@@ -165,8 +171,11 @@ function SideBar({ component: Component, ...rest }) {
           return (
             <ListItem
               button
-              onClick={() => setIndex(index)}
-              className={classes.listItem}
+              onClick={() => {
+                setIndex(index)
+                setActive(index)
+              }}
+              className={`${classes.listItem} ${active=== index ? classes.active:null}`}
             >
               <ListItemIcon>{Ficons[index]}</ListItemIcon>
               <ListItemText primary={route.sidebarName} />
@@ -176,8 +185,11 @@ function SideBar({ component: Component, ...rest }) {
           return (
             <ListItem
               button
-              onClick={() => setIndex(index)}
-              className={classes.listItem}
+              onClick={() => {
+                setIndex(index)
+                setActive(index)
+              }}
+              className={`${classes.listItem} ${active=== index ? classes.active:null}`}
             >
               <ListItemIcon>{icons[index]}</ListItemIcon>
               <ListItemText primary={route.sidebarName} />

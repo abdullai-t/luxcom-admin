@@ -45,11 +45,11 @@ class Rooms extends Component {
 
   deleteRoom = async (item) => {
     let { rooms } = this.state;
-    let filtered = rooms.filter((x) => x.id !== item.id);
-    this.setState({ rooms: filtered });
     let res = await deleteRoomFromBackend(this.props.token, item.name);
     if (res && res.success) {
-      this.props.saveDashboardData();
+      let filtered = rooms.filter((x) => x.id !== item.id);
+      this.setState({ rooms: filtered }, ()=>this.props.saveDashboardData());
+      
     }
   };
 
