@@ -159,7 +159,6 @@ function SideBar({ component: Component, ...rest }) {
     )
   };
   const is_accountant = accountant ? accountant.is_accountant: false
-  console.log(is_accountant)
   const drawer = (
     
     <div>

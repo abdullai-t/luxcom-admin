@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import Avatar from "@material-ui/core/Avatar";
-import FolderIcon from "@material-ui/icons/Folder";
 import Paper from "@material-ui/core/Paper";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import EventSeatIcon from "@material-ui/icons/EventSeat";
 import PeopleIcon from "@material-ui/icons/People";
-import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import { Table } from "react-bootstrap";
 import DeleteIcon from "@material-ui/icons/Delete";
 import "../../css/Home.css";
@@ -40,14 +38,13 @@ class Home extends Component {
 
   deleteUserReservation = async (item) => {
     let { bills_today } = this.state.dashboard;
-    let filtered = bills_today.filter((x) => x.id !== item.id);
-    let newDash = { ...this.state.dashboard };
-    newDash.bills_today = filtered;
-    this.setState({ dashboard: newDash });
 
     let res = await deleteReservation(this.props.token, item.reservation.id);
-    if (res.success) {
-      this.props.saveDashboardData();
+    if (res && res.success) {
+      let filtered = bills_today.filter((x) => x.id !== item.id);
+      let newDash = { ...this.state.dashboard };
+      newDash.bills_today = filtered;
+      this.setState({ dashboard: newDash });
     }
   };
 

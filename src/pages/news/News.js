@@ -47,7 +47,7 @@ class News extends Component {
     );
     if (res && res.success) {
       let filtered = news.filter((x) => x.id !== item.id);
-      this.setState({ news: filtered }, ()=>this.props.saveDashboardData());
+      this.setState({ news: filtered });
       
     }
   };

@@ -45,7 +45,7 @@ class Services extends Component {
     );
     if (res && res.success) {
       let filtered = services.filter((x) => x.id !== item.id);
-      this.setState({ services: filtered }, ()=>this.props.saveDashboardData());
+      this.setState({ services: filtered });
       
     }
   };

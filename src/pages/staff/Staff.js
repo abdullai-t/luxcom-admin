@@ -45,11 +45,10 @@ class Staff extends Component {
 
   deleteAStaff = async (user) => {
     let { staff } = this.state;
- 
     let res = await deleteStaff(this.props.token, user.fname);
     if (res && res.success) {
       let filtered = staff.filter((x) => x.fname !== user.fname);
-      this.setState({ staff: filtered }, ()=>this.props.saveDashboardData());
+      this.setState({ staff: filtered });
     }
   };
 
@@ -58,7 +57,8 @@ class Staff extends Component {
     let res = await deleteUser(this.props.token, user.username);
     if (res && res.success) {
       let filtered = admins.filter((x) => x.fname !== user.fname);
-      this.setState({ admins: filtered }, ()=>this.props.saveDashboardData());
+      this.setState({ admins: filtered })
+      
     }
   };
 
@@ -102,7 +102,7 @@ class Staff extends Component {
             {admins && admins.length
               ? admins.map((admin, index) => {
                   return (
-                    <tr>
+                    <tr key={index}>
                       <th>{index + 1}</th>
                       <th>{admin.fname + "  " + admin.lname}</th>
                       <th>{admin.username}</th>
