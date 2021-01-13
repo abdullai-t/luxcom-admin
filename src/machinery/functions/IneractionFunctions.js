@@ -19,7 +19,8 @@ import {
   UPDATE_NEWS_URL,
   DELETE_A_NEWS_URL,
   CREATE_STAFF_URL,
-  DELETE_USER_URL
+  DELETE_USER_URL,
+  CHAINED_QUERY_URL
 } from "../Konstants";
 
 export const LoginUser = (cred) => {
@@ -278,6 +279,20 @@ export const saveEditANews = (token, data, id) => {
 
 export const deleteANews = (token, id) => {
   let response = Axios.delete(`${DELETE_A_NEWS_URL+id}/`,  {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => console.log(err));
+  return response;
+};
+
+
+export const adminAddReservation = (data, token) => {
+  let response = Axios.post(CHAINED_QUERY_URL, data, {
     headers: {
       Authorization: `Token ${token}`,
     },

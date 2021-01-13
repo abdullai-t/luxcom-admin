@@ -14,7 +14,8 @@ import Finances from '../pages/finances/Finances';
 export const SAVE_USER_DATA_TO_STATE = "SAVE_USER_DATA_TO_STATE"
 export const SAVE_DASHBOARD_DATA_TO_STATE = "SAVE_DASHBOARD_DATA_TO_STATE"
 
-const DOMAIN = "https://luxcom-web-api.herokuapp.com"
+const isLocal = true
+const DOMAIN = !isLocal ? "https://luxcom-web-api.herokuapp.com" : "http://127.0.0.1:8000"
 
 export const LOGIN_URL = DOMAIN+"/api/auth/admin-login/"
 export const REGISTER_URL = DOMAIN+"/api/auth/manager/"
@@ -37,6 +38,9 @@ export const DELETE_USER_URL= DOMAIN+"/api/auth/delete/user/"
 export const ADD_NEWS_URL = DOMAIN+"/api/news/add/"
 export const DELETE_A_NEWS_URL = DOMAIN+"/api/news/delete/"
 export const UPDATE_NEWS_URL= DOMAIN+"/api/news/update/"
+export const CHAINED_QUERY_URL = DOMAIN+"/api/reservation/chained/data/"
+
+export const SELF_PAY_URL = "http://localhost:3000"
 
 
 
