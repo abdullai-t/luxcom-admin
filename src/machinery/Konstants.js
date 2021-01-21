@@ -8,6 +8,7 @@ import Reservations from './../pages/reservation/Reservations';
 import Messaging from './../pages/Messaging/Messaging';
 import News from '../pages/news/News';
 import Finances from '../pages/finances/Finances';
+import Dashboard from '../pages/Accounting/Dashboard';
 
 
 // ======= pure constants================
@@ -39,16 +40,6 @@ export const ADD_NEWS_URL = DOMAIN+"/api/news/add/"
 export const DELETE_A_NEWS_URL = DOMAIN+"/api/news/delete/"
 export const UPDATE_NEWS_URL= DOMAIN+"/api/news/update/"
 export const CHAINED_QUERY_URL = DOMAIN+"/api/reservation/chained/data/"
-
-export const SELF_PAY_URL = "http://localhost:3000"
-
-
-
-
-
-
-
-
 
 
 export const Routes = [
@@ -89,7 +80,7 @@ export const Routes = [
   export const AccountantRoutes = [
     {
       sidebarName: 'Dashboard',
-      component: <Home />
+      component: <Dashboard />
     },
 
     {
