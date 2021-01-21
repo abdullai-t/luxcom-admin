@@ -15,7 +15,9 @@ import TextsmsIcon from "@material-ui/icons/Textsms";
 import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
 import EmailIcon from "@material-ui/icons/Email";
 import MessagingForm from "../../reusables/MessagingForm";
-import ContactSupportIcon from '@material-ui/icons/ContactSupport';
+import ContactSupportIcon from "@material-ui/icons/ContactSupport";
+import PaidVsUnpaid from "../Accounting/charts/PaidVsUnpaid";
+import NumberOfMontlyBooking from "../Accounting/charts/NumberOfMontlyBooking";
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -23,7 +25,7 @@ class Home extends Component {
       dashboard: {},
       emailMode: false,
       smsMode: false,
-      receiver: '',
+      receiver: "",
       messageType: "",
     };
   }
@@ -53,11 +55,14 @@ class Home extends Component {
   };
 
   sendSMS = (user) => {
-    this.setState({  receiver: user.phone, messageType: "SMS" }, ()=>this.setState({smsMode: true}));
-    
+    this.setState({ receiver: user.phone, messageType: "SMS" }, () =>
+      this.setState({ smsMode: true })
+    );
   };
   sendEmail = (user) => {
-    this.setState({ receiver: user.email, messageType: "EMAIL" },()=>this.setState({  emailMode: true}));
+    this.setState({ receiver: user.email, messageType: "EMAIL" }, () =>
+      this.setState({ emailMode: true })
+    );
   };
   recentReservations = () => {
     const { bills_today } = this.state.dashboard;
@@ -65,7 +70,7 @@ class Home extends Component {
       <Paper elevation={3} id="surface">
         <div id="booking-table-header">
           <h3>Recent Reservations</h3>
-          <div onClick = {this.props.saveDashboardData}>
+          <div onClick={this.props.saveDashboardData}>
             <RefreshIcon style={{ color: "grey" }} />
           </div>
         </div>
@@ -128,6 +133,27 @@ class Home extends Component {
       </Paper>
     );
   };
+
+  showNumberOfMontlyBooking = () => {
+    return (
+      <div
+        style={{ marginTop: "2rem", padding: "15px 20px" }}
+        className="z-depth-1"
+      >
+        <NumberOfMontlyBooking />
+      </div>
+    );
+  };
+  showPaidVsUnpaid = () => {
+    return (
+      <div
+        style={{ marginTop: "2rem", padding: "15px 20px" }}
+        className="z-depth-1"
+      >
+        <PaidVsUnpaid ratio={this.props.ratio} />
+      </div>
+    );
+  };
   render() {
     const { dashboard } = this.state;
     return (
@@ -188,6 +214,9 @@ class Home extends Component {
             </div>
           </div>
         </div>
+        {this.showNumberOfMontlyBooking()}
+
+        {this.showPaidVsUnpaid()}
         {this.recentReservations()}
 
         {this.state.emailMode || this.state.smsMode ? (
@@ -207,6 +236,7 @@ const mapStateToProps = (state) => {
   return {
     dashboard: state.dashboard,
     token: state.user.token,
+    ratio:state.dashboard.ratio,
   };
 };
 const mapDispatchToProps = (dispatch) => {
