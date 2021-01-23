@@ -20,7 +20,8 @@ import {
   DELETE_A_NEWS_URL,
   CREATE_STAFF_URL,
   DELETE_USER_URL,
-  CHAINED_QUERY_URL
+  CHAINED_QUERY_URL,
+  FETCH_REPORTS_URL
 } from "../Konstants";
 
 export const LoginUser = (cred) => {
@@ -303,3 +304,16 @@ export const adminAddReservation = (data, token) => {
     .catch((err) => console.log(err));
   return response;
 };
+
+export const getReportFromBackend = (data, token)=>{
+  let response = Axios.post(FETCH_REPORTS_URL, data, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => console.log(err));
+  return response;
+}

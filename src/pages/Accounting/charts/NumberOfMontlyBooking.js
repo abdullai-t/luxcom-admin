@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Bar } from "react-chartjs-2";
 import { connect } from "react-redux";
+import { Months } from "../../../machinery/Konstants";
 
 class NumberOfMontlyBooking extends Component {
   constructor(props) {
@@ -28,20 +29,7 @@ class NumberOfMontlyBooking extends Component {
       <div>
         <Bar
           data={{
-            labels: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "May",
-              "June",
-              "July",
-              "Aug",
-              "Sept",
-              "Oct",
-              "Nov",
-              "Dec",
-            ],
+            labels:Months,
             datasets: [
               {
                 label: "Reservations",

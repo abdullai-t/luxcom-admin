@@ -1,0 +1,19 @@
+#report-main-container{
+    padding: 20px 25px;
+}
+
+#btn-container{
+    margin-top: 2rem;
+}
+
+#get-report-btn{
+    padding: 10px 20px;
+}
+
+#get-report-btn:active, #get-report-btn:focus{
+    outline: none !important;
+}
+
+.space-top{
+    margin-top: 1.7rem;
+}

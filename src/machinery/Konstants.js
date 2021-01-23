@@ -40,6 +40,7 @@ export const ADD_NEWS_URL = DOMAIN+"/api/news/add/"
 export const DELETE_A_NEWS_URL = DOMAIN+"/api/news/delete/"
 export const UPDATE_NEWS_URL= DOMAIN+"/api/news/update/"
 export const CHAINED_QUERY_URL = DOMAIN+"/api/reservation/chained/data/"
+export const FETCH_REPORTS_URL = DOMAIN+"/api/reservation/fetch-reports/"
 
 
 export const Routes = [
@@ -84,7 +85,7 @@ export const Routes = [
     },
 
     {
-      sidebarName: 'Finance',
+      sidebarName: 'Reports',
       component: <Finances/>,
     },
     {
@@ -92,3 +93,19 @@ export const Routes = [
       component: <Profile/>,
     },
   ];
+
+
+  export const Months =  [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "June",
+    "July",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+  ]
