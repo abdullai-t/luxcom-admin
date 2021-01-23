@@ -15,7 +15,7 @@ import Dashboard from '../pages/Accounting/Dashboard';
 export const SAVE_USER_DATA_TO_STATE = "SAVE_USER_DATA_TO_STATE"
 export const SAVE_DASHBOARD_DATA_TO_STATE = "SAVE_DASHBOARD_DATA_TO_STATE"
 
-const isLocal = true
+const isLocal = false
 const DOMAIN = !isLocal ? "https://luxcom-web-api.herokuapp.com" : "http://127.0.0.1:8000"
 
 export const LOGIN_URL = DOMAIN+"/api/auth/admin-login/"
